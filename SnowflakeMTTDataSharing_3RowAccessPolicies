@@ -1,0 +1,53 @@
+
+-- =====================================================================
+-- OPTION 2. ROW ACCESS POLICIES ON BASE TABLES
+-- =====================================================================
+--Option 2: Create row access policies to filter rows and share them in a listing
+--Step 2.1 Create Row Access Policy
+-- Row access policy for customer-based filtering using current_account()
+USE SCHEMA CORE_DATA;
+
+CREATE OR REPLACE ROW ACCESS POLICY CUSTOMER_ACCOUNT_FILTER AS (CUSTOMER_KEY VARCHAR(50)) RETURNS BOOLEAN -> EXISTS (
+    SELECT 1
+    FROM CORE_DATA.CUSTOMER_ACCOUNT_MAPPING cam
+    WHERE cam.CUSTOMER_KEY = CUSTOMER_KEY
+        AND cam.IS_ACTIVE = TRUE
+        AND (
+            -- Allow access if current account matches the mapped account
+            cam.SNOWFLAKE_ACCOUNT_IDENTIFIER = CURRENT_ACCOUNT()
+            OR cam.ACCOUNT_LOCATOR = CURRENT_ACCOUNT()
+            OR CURRENT_ACCOUNT() IN ('GX99240') -- show all records if its provider account
+        )
+);
+    
+
+--Step 2.2 Apply Row access policy to base tables
+ALTER TABLE CUSTOMERS ADD ROW ACCESS POLICY CUSTOMER_ACCOUNT_FILTER ON (CUSTOMER_KEY);
+ALTER TABLE SALES_TRANSACTIONS ADD ROW ACCESS POLICY CUSTOMER_ACCOUNT_FILTER ON (CUSTOMER_KEY);
+ALTER TABLE PRODUCTS ADD ROW ACCESS POLICY CUSTOMER_ACCOUNT_FILTER ON (CUSTOMER_KEY);
+
+--Step 2.3 Create a share with Secured Views without Row Access Policies
+-- Create share for customer data
+CREATE SHARE IF NOT EXISTS SHARE_TABLES_WITH_RAP COMMENT = 'Secure customer data share with row access policies';
+
+-- Grant usage on database and schemas to the share
+GRANT USAGE ON DATABASE SECURE_DATA_SHARING TO SHARE SHARE_TABLES_WITH_RAP;
+GRANT USAGE ON SCHEMA SECURE_DATA_SHARING.CORE_DATA TO SHARE SHARE_TABLES_WITH_RAP;
+    
+-- Grant access to secure views
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.CUSTOMERS TO SHARE SHARE_TABLES_WITH_RAP;
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.SALES_TRANSACTIONS TO SHARE SHARE_TABLES_WITH_RAP;
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.PRODUCTS TO SHARE SHARE_TABLES_WITH_RAP;
+
+--Step 2.4 Create Listing that includes the share created above. Example below is a very basic.
+--Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_TABLES_WITH_RAP SHARE SHARE_TABLES_WITH_RAP AS $$
+title: "CUSTOMER DATA TABLES WITH RAP"
+description: "This listing provides access CUSTOMER DATA with Row Access Policies"
+listing_terms:
+   type: "STANDARD"
+targets:
+    accounts: ["CUSTORG1.ACOUNTNAME1","CUSTORG2.ACOUNTNAME2"]
+$$ COMMENT = 'Change your target accounts as created in the mapping table';
+
+--=== End of Setting up Row Access Policies ===---
