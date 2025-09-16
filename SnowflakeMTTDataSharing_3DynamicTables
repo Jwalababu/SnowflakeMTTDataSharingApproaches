@@ -1,0 +1,61 @@
+-- =====================================================================
+-- OPTION 3. DYNAMIC TABLES
+-- =====================================================================
+--Option 3:Create Dynamic tables and share seperate listings with each customer with their specific dynamic tables
+--Step 3.1 Create Dynamic tables from base tables with Row Access Policies applied.
+--Create seperate schema for each customer so it holds dynamic tables belong to that customer
+CREATE OR REPLACE SCHEMA DYNAMIC_TABLES_<CLIENTX>;
+USE SCHEMA DYNAMIC_TABLES_<CLIENTX>;
+
+CREATE OR REPLACE DYNAMIC TABLE CUSTOMERS_DT TARGET_LAG = '24 HOURS' WAREHOUSE = COMPUTE_WH AS
+SELECT *
+FROM CORE_DATA.CUSTOMERS c
+WHERE c.CUSTOMER_KEY in (
+    SELECT CUSTOMER_KEY
+    FROM CORE_DATA.CUSTOMER_ACCOUNT_MAPPING cam
+    WHERE cam.IS_ACTIVE = TRUE AND cam.ACCOUNT_LOCATOR = 'XXY57412'
+    );
+    
+CREATE OR REPLACE DYNAMIC TABLE PRODUCTS_DT TARGET_LAG = '24 HOURS' WAREHOUSE = COMPUTE_WH AS
+SELECT *
+FROM CORE_DATA.PRODUCTS p
+WHERE p.CUSTOMER_KEY in (
+    SELECT CUSTOMER_KEY
+    FROM CORE_DATA.CUSTOMER_ACCOUNT_MAPPING cam
+    WHERE cam.IS_ACTIVE = TRUE AND cam.ACCOUNT_LOCATOR = 'XXY57412'
+    );
+    
+CREATE OR REPLACE DYNAMIC TABLE SALES_TRANSACTIONS_DT TARGET_LAG = '24 HOURS' WAREHOUSE = COMPUTE_WH AS
+SELECT *
+FROM CORE_DATA.SALES_TRANSACTIONS s
+WHERE s.CUSTOMER_KEY in (
+    SELECT CUSTOMER_KEY
+    FROM CORE_DATA.CUSTOMER_ACCOUNT_MAPPING cam
+    WHERE cam.IS_ACTIVE = TRUE AND cam.ACCOUNT_LOCATOR = 'XXY57412'
+    );
+    
+--Step 3.2 Create a share with Dynamic Tables
+-- Create share for customer data. Note the share is specific to each customer
+CREATE SHARE IF NOT EXISTS SHARE_DYNAMIC_TABLES_<CLIENTX> COMMENT = 'Secure customer data share with DYNAMIC_TABLES';
+
+-- Grant usage on database and schemas to the share
+GRANT USAGE ON DATABASE SECURE_DATA_SHARING TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
+GRANT USAGE ON SCHEMA SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX> TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
+
+-- Grant access to Dynamic Tables
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX>.CUSTOMERS_DT TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX>.SALES_TRANSACTIONS_DT TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
+GRANT SELECT ON VIEW SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX>.PRODUCTS_DT TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
+    
+--Step 3.3 Create Listing that includes the share created above. Example below is a very basic.
+--Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_DYNAMIC_TABLES_<CLIENTX> SHARE SHARE_DYNAMIC_TABLES_<CLIENTX> AS $$
+title: "CUSTOMER DATA WITH DYNAMIC_TABLES for customer AWS2"
+description: "This listing provides access CUSTOMER DATA with DYNAMIC_TABLES"
+listing_terms:
+   type: "STANDARD"
+targets:
+    accounts: ["CUSTORG1.ACOUNTNAME1"]
+$$ COMMENT = 'Change your target account name  as created in the mapping table';
+
+--=== End of Script for setting up Dynamic Tables ===---
