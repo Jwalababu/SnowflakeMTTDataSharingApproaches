@@ -1,0 +1,18 @@
+-- =====================================================================
+-- OPTIONAL STEP: CLEANUP SCRIPT TO DROP SCHEMAS AND DATABASE CREATED
+-- =====================================================================
+USE DATABASE SECURE_DATA_SHARING;
+
+-- Drop schemas
+DROP SCHEMA IF NOT EXISTS CORE_DATA;
+DROP SCHEMA IF NOT EXISTS SECURE_VIEWS;
+DROP SCHEMA IF NOT EXISTS SECURE_MATERIALIZED_VIEWS_<CLIENTX>;
+DROP SCHEMA IF NOT EXISTS DYNAMIC_TABLES_<CLIENTX>;
+DROP SCHEMA IF NOT EXISTS SHARED_DATA;
+
+-- Drop database created for secure data sharing
+DROP DATABASE IF NOT EXISTS SECURE_DATA_SHARING;
+
+-- =====================================================================
+-- END OF CLEANUP SCRIPT
+-- =====================================================================
