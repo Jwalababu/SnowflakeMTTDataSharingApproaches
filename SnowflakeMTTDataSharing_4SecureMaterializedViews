@@ -48,7 +48,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_MATERIALIZED_VIEWS_<CLIENTX>.SAL
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_MATERIALIZED_VIEWS_<CLIENTX>.PRODUCTS_SMV TO SHARE SHARE_SECURE_MATERIALIZED_VIEWS_<CLIENTX>;
     
 --Step 4.5 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_SECURE_MATERIALIZED_VIEWS_<CLIENTX> SHARE SHARE_SECURE_MATERIALIZED_VIEWS_<CLIENTX> AS $$
 title: "CUSTOMER DATA WITH SECURE_MATERIALIZED_VIEWS_<CLIENTX> for customer AWS2"
 description: "This listing provides access CUSTOMER DATA with SECURE_MATERIALIZED_VIEWS_<CLIENTX>"
