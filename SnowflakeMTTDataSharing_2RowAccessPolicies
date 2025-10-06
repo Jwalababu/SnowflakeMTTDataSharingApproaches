@@ -40,7 +40,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.SALES_TRANSACTIONS TO SHARE S
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.PRODUCTS TO SHARE SHARE_TABLES_WITH_RAP;
 
 --Step 2.4 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_TABLES_WITH_RAP SHARE SHARE_TABLES_WITH_RAP AS $$
 title: "CUSTOMER DATA TABLES WITH RAP"
 description: "This listing provides access CUSTOMER DATA with Row Access Policies"
