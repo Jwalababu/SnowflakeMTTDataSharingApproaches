@@ -54,7 +54,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_VIEWS.SALES_TRANSACTIONS_SECURE_
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_VIEWS.PRODUCTS_SECURE_VIEW TO SHARE SHARE_SECURE_VIEWS;
 
 --Step 1.4 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_SECURE_VIEWS SHARE SHARE_SECURE_VIEWS AS $$
 title: "CUSTOMER DATA SECURE VIEWS"
 description: "This listing provides access CUSTOMER DATA IN SECURE VIEWS"
