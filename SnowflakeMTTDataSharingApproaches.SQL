@@ -457,7 +457,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_VIEWS.SALES_TRANSACTIONS_SECURE_
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_VIEWS.PRODUCTS_SECURE_VIEW TO SHARE SHARE_SECURE_VIEWS;
 
 --Step 1.4 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML  description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_SECURE_VIEWS SHARE SHARE_SECURE_VIEWS AS $$
 title: "CUSTOMER DATA SECURE VIEWS"
 description: "This listing provides access CUSTOMER DATA IN SECURE VIEWS"
@@ -509,7 +509,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.SALES_TRANSACTIONS TO SHARE S
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.CORE_DATA.PRODUCTS TO SHARE SHARE_TABLES_WITH_RAP;
 
 --Step 2.4 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML  description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_TABLES_WITH_RAP SHARE SHARE_TABLES_WITH_RAP AS $$
 title: "CUSTOMER DATA TABLES WITH RAP"
 description: "This listing provides access CUSTOMER DATA with Row Access Policies"
@@ -570,7 +570,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX>.SALES_TRANSACT
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.DYNAMIC_TABLES_<CLIENTX>.PRODUCTS_DT TO SHARE SHARE_DYNAMIC_TABLES_<CLIENTX>;
     
 --Step 3.3 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML  description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_DYNAMIC_TABLES_<CLIENTX> SHARE SHARE_DYNAMIC_TABLES_<CLIENTX> AS $$
 title: "CUSTOMER DATA WITH DYNAMIC_TABLES for customer AWS2"
 description: "This listing provides access CUSTOMER DATA with DYNAMIC_TABLES"
@@ -631,7 +631,7 @@ GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_MATERIALIZED_VIEWS_<CLIENTX>.SAL
 GRANT SELECT ON VIEW SECURE_DATA_SHARING.SECURE_MATERIALIZED_VIEWS_<CLIENTX>.PRODUCTS_SMV TO SHARE SHARE_SECURE_MATERIALIZED_VIEWS_<CLIENTX>;
     
 --Step 4.5 Create Listing that includes the share created above. Example below is a very basic.
---Feel free to elaborate the YML ddescription here or expand the listing information in Snowsight listings wizard
+--Feel free to elaborate the YAML  description here or expand the listing information in Snowsight listings wizard
 CREATE EXTERNAL LISTING IF NOT EXISTS LISTING_SECURE_MATERIALIZED_VIEWS_<CLIENTX> SHARE SHARE_SECURE_MATERIALIZED_VIEWS_<CLIENTX> AS $$
 title: "CUSTOMER DATA WITH SECURE_MATERIALIZED_VIEWS_<CLIENTX> for customer AWS2"
 description: "This listing provides access CUSTOMER DATA with SECURE_MATERIALIZED_VIEWS_<CLIENTX>"
